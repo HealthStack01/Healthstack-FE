@@ -1,66 +1,41 @@
 import { Stack } from '@mui/material';
-import React, { useState } from 'react';
 
-import Input from '../../../components/inputs/basic/Input';
-import CustomSelect from '../../../components/inputs/basic/Select';
-import { createOrganizationData } from '../../../utils/data';
+import { useForm } from 'react-hook-form';
+import DynamicInput from '../../../components/app/DynamicInput';
+import { createOrganizationDataSchema } from '../../../components/app/ModelSchema';
+
+import Button from '../../../components/buttons/Button';
+
 
 function CreateOrganization() {
-  const [values, setValues] = useState({});
-  console.log(values);
+  const { control, handleSubmit } = useForm();
 
-  // const {
-  //   nameOfOrganzation,
-  //   cacNumber,
-  //   organizationCountry,
-  //   state,
-  //   lga,
-  //   citytown,
-  //   registeredAddress,
-  //   contactPhoneNumber,
-  //   organizationEmail,
-  //   organizationCEO,
-  //   organizationType,
-  //   organizationCategory,
-  // } = formData;
+
+  const onSubmit = (data) => {
+    console.log(data)
+  }
+
 
   return (
     <Stack spacing={3} sx={{ width: '100%', mt: 4, mb: 4 }}>
-      <form action="">
-        {createOrganizationData.map((data, index) => {
-          const { name, options, label } = data;
+      <form onSubmit={handleSubmit(onSubmit)}>
 
-          if (!options) {
-            return (
-              <Input
-                {...data}
-                name={name}
-                key={index}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              />
-            );
-          }
-          return (
-            <CustomSelect
-              {...data}
-              name={name}
-              label={label}
-              key={index}
-              options={options}
-              onChange={(e) =>
-                setValues({
-                  ...values,
-                  [e.target.name]: e.target.value,
-                })
-              }
+        {createOrganizationDataSchema.map(({inputType, key, name, options } ) => (
+            <DynamicInput
+              key = {key}
+              inputType = {inputType}
+              name = {key}
+              label= {name}
+              options = {options || []}
+              control = {control}
             />
-          );
-        })}
+
+          ))
+        }
+
+        <Button type="submit" label="Submit" fullwidth />
+
+
       </form>
     </Stack>
   );

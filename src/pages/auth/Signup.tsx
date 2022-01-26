@@ -35,6 +35,8 @@ function Signup() {
         ? steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
+
+
   };
 
   const handleBack = () => {
@@ -61,6 +63,10 @@ function Signup() {
   const onSubmit = () => {
     navigate('/app');
   };
+
+  const handleSubmit =(data) => {
+    console.log(data)
+  }
 
   return (
     <AuthWrapper paragraph="Signup here as an organization">
@@ -99,7 +105,7 @@ function Signup() {
             Complete
           </Button>
         ) : (
-          <Button onClick={handleNext}>Next</Button>
+          <Button onSubmit={(data) => handleSubmit(data)} onClick={handleNext}>Next</Button>
         )}
       </Box>
 

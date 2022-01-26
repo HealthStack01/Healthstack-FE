@@ -62,6 +62,7 @@ interface CreateOrganizationProps {
   type?: string;
   label?: string;
   name?: string;
+
   children?: {
     type?: string;
     label: string;
@@ -133,6 +134,6 @@ export const createOrganizationData: CreateOrganizationProps[] = [
   {
     label: 'Organization Category',
     name: 'organizationCategory',
-    options: organizationOptions,
+    // options: organizationCategory,
   },
 ];
