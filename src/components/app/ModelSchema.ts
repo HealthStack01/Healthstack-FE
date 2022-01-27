@@ -6,7 +6,6 @@ import {
 
   organizationOptions,
   organizationTypeOptions,
-
 } from '../../utils/data';
 
 
@@ -251,8 +250,237 @@ const createOrganizationDataSchema = [
     inputType: InputType.SELECT,
     options: organizationOptions,
   },
-
 ];
+
+
+const moduleSchema = {
+  first: [
+    {
+      name: 'Accounting',
+      key: 'accounting',
+      description: 'Accounting',
+      selector: (row) => row.accounting,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Admin',
+      key: 'Admin',
+      description: 'Admin',
+      selector: (row) => row.Admin,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Blood Bank',
+      key: 'bloodBank',
+      description: 'Blood Bank',
+      selector: (row) => row.bloodBank,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Client',
+      key: 'client',
+      description: 'Client',
+      selector: (row) => row.client,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Clinic',
+      key: 'clinic',
+      description: 'Clinic',
+      selector: (row) => row.clinic,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Communication',
+      key: 'communication',
+      description: 'Communication',
+      selector: (row) => row.communication,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Continous Mediscal Education',
+      key: 'continousMediscalEducation',
+      description: 'Continous Mediscal Education',
+      selector: (row) => row.continousMediscalEducation,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Documentation',
+      key: 'documentation',
+      description: 'Documentation',
+      selector: (row) => row.documentation,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Epidemiology',
+      key: 'epidemiology',
+      description: 'Epidemiology',
+      selector: (row) => row.epidemiology,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Finance',
+      key: 'finance',
+      description: 'Finance',
+      selector: (row) => row.finance,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  
+    {
+      name: 'Immunization',
+      key: 'immunization',
+      description: 'Immunization',
+      selector: (row) => row.immunization,
+      sortable: true,
+      required: true,
+      inputType: InputType.CHECKBOX,
+    },
+  ],
+  
+  
+  second: [
+  {
+    name: 'Inventory',
+    key: 'inventory',
+    description: 'Inventory',
+    selector: (row) => row.inventory,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'Laboratory',
+    key: 'laboratory',
+    description: 'Laboratory',
+    selector: (row) => row.laboratory,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'Managed Care',
+    key: 'managedCare',
+    description: 'Managed Care',
+    selector: (row) => row.managedCare,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'Patient Portal',
+    key: 'patientPortal',
+    description: 'Patient Portal',
+    selector: (row) => row.patientPortal,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'Pharmacy',
+    key: 'pharmacy',
+    description: 'Pharmacy',
+    selector: (row) => row.pharmacy,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'Radiology',
+    key: 'radiology',
+    description: 'Radiology',
+    selector: (row) => row.radiology,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'Report',
+    key: 'report',
+    description: 'Report',
+    selector: (row) => row.report,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'Research and Data Exhange',
+    key: 'researchAndDataExhange',
+    description: 'Research and Data Exhange',
+    selector: (row) => row.researchAndDataExhange,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'Telemedicine',
+    key: 'telemedicine',
+    description: 'Telemedicine',
+    selector: (row) => row.telemedicine,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'Theatre',
+    key: 'theatre',
+    description: 'Theatre',
+    selector: (row) => row.theatre,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+
+  {
+    name: 'User Profile',
+    key: 'userProfile',
+    description: 'User Profile',
+    selector: (row) => row.userProfile,
+    sortable: true,
+    required: true,
+    inputType: InputType.CHECKBOX,
+  },
+]
+  
+}
+
 
 
 
@@ -261,4 +489,5 @@ export {
   InputType, 
   OnboardingEmployeeSchema,
   createOrganizationDataSchema,
+  moduleSchema
 };

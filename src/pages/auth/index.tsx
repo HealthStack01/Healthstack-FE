@@ -26,7 +26,7 @@ function Login() {
       <form action="" onSubmit={() => onSubmit()}>
         <Input label="Email" placeholder="Enter your email" />
         <PasswordInput />
-        <CheckboxInput label="Keep me Logged in" />
+        <CheckboxInput label="Keep me Logged in"  />
         <Button type="submit" label="Login" fullwidth />
       </form>
 

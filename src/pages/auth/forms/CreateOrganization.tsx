@@ -1,4 +1,5 @@
 import { Stack } from '@mui/material';
+import client from '../../../feathers'
 
 import { useForm } from 'react-hook-form';
 import DynamicInput from '../../../components/app/DynamicInput';
@@ -7,13 +8,24 @@ import { createOrganizationDataSchema } from '../../../components/app/ModelSchem
 import Button from '../../../components/buttons/Button';
 
 
+
 function CreateOrganization() {
   const { control, handleSubmit } = useForm();
 
+  let OrgServ = null;
 
-  const onSubmit = (data) => {
-    console.log(data)
-  }
+  const onSubmit = (data, e) => {
+    e.preventDefault(e);
+
+    OrgServ = client.service('employee')
+
+    OrgServ.create(data)
+      .then(() => {
+      })
+      .catch((err) => console.error(err))
+  };
+
+
 
 
   return (

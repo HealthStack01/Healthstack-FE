@@ -6,12 +6,13 @@ import DynamicInput from '../../../components/app/DynamicInput';
 import { OnboardingEmployeeSchema } from '../../../components/app/ModelSchema';
 import Button from '../../../components/buttons/Button';
 
+
 function NewEmployee() {
   const { control, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-  };
+    console.log(data)
+  }
 
   return (
     <Stack spacing={3} sx={{ width: '100%' }}>

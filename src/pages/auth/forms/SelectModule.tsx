@@ -1,52 +1,76 @@
-import { Box, FormGroup, Stack } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Stack } from '@mui/material';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 
-import CheckboxInput from '../../../components/inputs/basic/Checkbox';
-import { modules } from '../../../utils/data';
+import client from '../../../feathers'
 
-function SelectModule() {
-  const [values, setValues] = useState({});
+import DynamicInput from '../../../components/app/DynamicInput';
+
+import Button from '../../../components/buttons/Button';
+import { moduleSchema } from '../../../components/app/ModelSchema';
+
+
+const SelectModule = () => {
+  const { control, handleSubmit } = useForm();
+
+  let OrgServ = null;
+
+
+  const onSubmit = (data) => {
+    console.log(data)
+  }
+
+  useEffect(() => {
+      OrgServ = client.service('employee')
+      const res = OrgServ.find();
+
+      console.log(res.organizationType)
+  }, [OrgServ])
+
+
 
   return (
     <Stack spacing={3} sx={{ width: '100%', mt: 4, mb: 4 }}>
-      <form action="">
+      <form   onSubmit={handleSubmit(onSubmit)} >
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
           }}
         >
-          <FormGroup>
-            {modules.first.map((module, index) => (
-              <CheckboxInput
-                label={module}
-                key={index}
-                name={module}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              />
-            ))}
-          </FormGroup>
-          <FormGroup>
-            {modules.second.map((module, index) => (
-              <CheckboxInput
-                label={module}
-                key={index}
-                name={module}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              />
-            ))}
-          </FormGroup>
+          <div>
+            {
+                moduleSchema.first.map(({ inputType, key, name }) => (
+
+                <DynamicInput
+                    key={key}
+                    inputType={inputType}
+                    name={key}
+                    label={name}
+                    control={control}
+                  />
+                ))
+            }
+          </div>
+
+          <div>
+            {
+              moduleSchema.second.map(({ inputType, key, name }) => (
+
+              <DynamicInput
+                  key={key}
+                  inputType={inputType}
+                  name={key}
+                  label={name}
+                  control={control}
+                />
+              ))
+            }
+          </div>
+
         </Box>
+        <Button type="submit" label="Submit" fullwidth />
+
       </form>
     </Stack>
   );

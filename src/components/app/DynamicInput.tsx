@@ -2,6 +2,7 @@ import { Controller } from 'react-hook-form';
 
 import Input from '../inputs/basic/Input';
 import CustomSelect from '../inputs/basic/Select';
+import CheckboxInput from '../inputs/basic/Checkbox'
 import { InputType } from './ModelSchema';
 
 const DynamicInput = (props) => {
@@ -32,6 +33,19 @@ const DynamicInput = (props) => {
         )}
       />
     );
+  }
+
+  if(inputType === InputType.CHECKBOX) {
+    return (
+      <Controller
+        key={name}
+        control={control}
+        name= {name}
+        render={({ field }) => (
+          <CheckboxInput {...field} label={label} />
+        )}
+      />
+    )
   }
 
   return <></>;

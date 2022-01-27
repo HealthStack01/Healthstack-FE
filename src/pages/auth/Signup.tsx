@@ -15,7 +15,7 @@ const steps = [
 ];
 
 function Signup() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const [activeStep, setActiveStep] = useState(0);
   const [completed] = useState<{
     [k: number]: boolean;
@@ -35,8 +35,6 @@ function Signup() {
         ? steps.findIndex((step, i) => !(i in completed))
         : activeStep + 1;
     setActiveStep(newActiveStep);
-
-
   };
 
   const handleBack = () => {
@@ -80,7 +78,7 @@ function Signup() {
         ))}
       </Stepper>
       {activeStep === 0 && <CreateOrganization />}
-      {activeStep === 1 && <SelectModule />}
+      {activeStep === 1 && <SelectModule  />}
       {activeStep === 2 && <AddAdmin />}
 
       <Box
