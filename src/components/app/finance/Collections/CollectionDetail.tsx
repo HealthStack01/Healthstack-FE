@@ -3,6 +3,7 @@ import DataTable from 'react-data-table-component';
 
 import AccordionBox from '../../../accordion';
 import Button from '../../../buttons/Button';
+import { CollectionSchema } from '../../ModelSchema';
 import {
   FullDetailsWrapper,
   GrayWrapper,
@@ -16,9 +17,18 @@ interface Props {
   editBtnClicked?: () => void;
   backClick: () => void;
   row?: any;
+  bal: number;
+  credit: any[];
+  debit: any[];
 }
 
-const CollectionDetails: React.FC<Props> = ({ row, backClick }) => {
+const CollectionDetails: React.FC<Props> = ({
+  row,
+  backClick,
+  bal,
+  credit,
+  debit,
+}) => {
   return (
     <PageWrapper>
       <GrayWrapper>
@@ -43,7 +53,7 @@ const CollectionDetails: React.FC<Props> = ({ row, backClick }) => {
                 borderRadius: '4px',
               }}
             >
-              Current Balance {row.amount}
+              Current Balance {bal}
             </label>
           </div>
         </HeadWrapper>
@@ -51,8 +61,8 @@ const CollectionDetails: React.FC<Props> = ({ row, backClick }) => {
           <GridWrapper className="two-columns">
             <AccordionBox defaultExpanded={true} title="Credit">
               <DataTable
-                data={row.credit}
-                columns={columnHead}
+                data={credit}
+                columns={CollectionSchema}
                 title="Credit"
                 pointerOnHover
                 highlightOnHover
@@ -61,8 +71,8 @@ const CollectionDetails: React.FC<Props> = ({ row, backClick }) => {
             </AccordionBox>
             <AccordionBox defaultExpanded={true} title="Debit">
               <DataTable
-                data={row.debit}
-                columns={columnHead}
+                data={debit}
+                columns={CollectionSchema}
                 title="Debit"
                 pointerOnHover
                 highlightOnHover

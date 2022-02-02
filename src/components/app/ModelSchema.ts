@@ -42,65 +42,7 @@ const BandSchema = [
     inputType: InputType.TEXT,
   },
 ];
-
-const RevenueSchema=[
-  {
-    name: 'S/N',
-    key: '_id',
-    description: 'Enter name of Revenue',
-    selector: (row) => row._id && row._id.substring(0, 7),
-    sortable: true,
-    required: true,
-    inputType: InputType.HIDDEN,
-  },
-  {
-    name: 'Date',
-    key: 'createdAt',
-    description: 'Enter date',
-    selector: (row) => row.createdAt  && row.createdAt.substring(0, 10),
-    sortable: true,
-    required: true,
-    inputType: InputType.TEXT,
-  },
-  {
-    name: 'Description',
-    key: 'description',
-    description: 'Enter name of description',
-    selector: (row) => row.description,
-    sortable: true,
-    required: true,
-    inputType: InputType.TEXT,
-  },
-  {
-    name: 'Client',
-    key: 'fromName',
-    description: 'Enter Client',
-    selector: (row) => row.fromName,
-    sortable: true,
-    required: false,
-    inputType: InputType.TEXT,
-  },
-  {
-    name: 'Amount',
-    key: 'amount',
-    description: 'Enter Amount',
-    selector: (row) => row.amount,
-    sortable: true,
-    required: false,
-    inputType: InputType.TEXT,
-  },
-  {
-    name: 'Mode',
-    key: 'paymentmode',
-    description: 'Enter Mode',
-    selector: (row) => row.paymentmode,
-    sortable: true,
-    required: false,
-    inputType: InputType.TEXT,
-  },
-]
-
-const CollectionSchema =[
+const CollectionSchema = [
   {
     name: 'S/N',
     key: '_id',
@@ -128,7 +70,7 @@ const CollectionSchema =[
     required: true,
     inputType: InputType.TEXT,
   },
- 
+
   {
     name: 'Amount',
     key: 'amount',
@@ -148,7 +90,7 @@ const CollectionSchema =[
     inputType: InputType.TEXT,
   },
 ]
-const EmployeeSchema = [
+  const EmployeeSchema = [
   {
     name: 'S/N',
     key: '_id',
@@ -163,23 +105,21 @@ const EmployeeSchema = [
     key: 'firstname',
     description: 'Enter firstname',
     selector: (row) => row.firstname,
-
     sortable: true,
     required: true,
     inputType: InputType.TEXT,
   },
   {
-      name: 'Last Name',
+    name: 'Last Name',
     key: 'lastname',
     description: 'Enter lastname',
     selector: (row) => row.lastname,
-
     sortable: true,
     required: true,
     inputType: InputType.TEXT,
   },
   {
-     name: 'Profession',
+    name: 'Profession',
     key: 'profession',
     description: 'Enter profession',
     selector: (row) => row.profession,
@@ -253,5 +193,69 @@ const LocationSchema = [
     required: true,
     inputType: InputType.SELECT,
   },
-]
-export { BandSchema, RevenueSchema, CollectionSchema,EmployeeSchema,LocationSchema, InputType };
+];
+const RevenueSchema = [
+  {
+    name: 'S/N',
+    key: '_id',
+    description: 'Enter name of Revenue',
+    selector: (row) => row._id && row._id.substring(0, 7),
+    sortable: true,
+    required: true,
+    inputType: InputType.HIDDEN,
+  },
+  {
+    name: 'Date',
+    key: 'createdAt',
+    description: 'Enter date',
+    selector: (row) => row.createdAt && row.createdAt.substring(0, 10),
+    sortable: true,
+    required: true,
+    inputType: InputType.TEXT,
+  },
+  {
+    name: 'Description',
+    key: 'description',
+    description: 'Enter name of description',
+    selector: (row) => row.description,
+    sortable: true,
+    required: true,
+    inputType: InputType.TEXT,
+  },
+  {
+    name: 'Client',
+    key: 'fromName',
+    description: 'Enter Client',
+    selector: (row) => row.fromName,
+    sortable: true,
+    required: false,
+    inputType: InputType.TEXT,
+  },
+  {
+    name: 'Amount',
+    key: 'amount',
+    description: 'Enter Amount',
+    selector: (row) => row.amount,
+    sortable: true,
+    required: false,
+    inputType: InputType.TEXT,
+  },
+  {
+    name: 'Mode',
+    key: 'paymentmode',
+    description: 'Enter Mode',
+    selector: (row) => row.paymentmode,
+    sortable: true,
+    required: false,
+    inputType: InputType.TEXT,
+  },
+];
+
+export {
+  BandSchema,
+  CollectionSchema,
+  EmployeeSchema,
+  LocationSchema,
+  RevenueSchema,
+  InputType,
+};
