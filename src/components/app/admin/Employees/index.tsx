@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-
 import { useObjectState, UserContext } from '../../../../context/context';
 import client from '../../../../feathers';
-import { getFormStrings } from '../../Utils';
 import EmployeeCreate from './EmployeeCreate';
+import { getFormStrings } from '../../Utils';
 import EmployeeDetails from './EmployeeDetail';
 import Employees from './EmployeeList';
 import EmployeeModify from './EmployeeModify';
@@ -13,7 +12,9 @@ function AppEmployees() {
   let EmployeeServ = client.service('employee');
   const { resource, setResource } = useObjectState();
   const { user } = useContext(UserContext);
-  const [employee, setEmployees] = useState([]);
+  console.log(user);
+  
+  const [employee, setEmployee] = useState([]);
   let Employee = resource.employeeResource.selectedEmployee;
 
   const backClick = () => {
@@ -26,33 +27,51 @@ function AppEmployees() {
     }));
   };
 
-  const getEmployees = async () => {
-    EmployeeServ.find({
-      query: {
-        facility:
-          user.currentEmployee && user.currentEmployee.facilityDetail._id,
-        $limit: 200,
-        $sort: {
-          createdAt: user.currentEmployee && -1,
-          facility: user.stacker && -1,
+  const getEmployee = async () => {
+    if (user.currentEmployee) {
+      EmployeeServ.find({
+        query: {
+          facility: user.currentEmployee.facilityDetail._id,
+          $limit: 200,
+          $sort: {
+            createdAt: -1,
+          },
         },
-      },
-    })
-      .then((res) => {
-        setEmployees(res.data);
-        toast('Employees fetched succesfully');
       })
-      .catch((error) => {
-        console.error({ error });
-        toast.error(error);
-      });
+        .then((res) => {console.log(res)
+          setEmployee(res.data);
+          toast('Employees fetched succesfully');
+        })
+
+        .catch((error) => {
+          console.error({ error });
+        });
+    } else if (user.stacker) {
+      EmployeeServ.find({
+        query: {
+          $limit: 200,
+          $sort: {
+            facility: -1,
+          },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          
+          setEmployee(res.data);
+          
+        })
+        .catch((error) => {
+          toast.error(error);
+        });
+    }
   };
 
   const handleDelete = () => {
-    EmployeeServ.remove(Employee)
-      .then(() => {
+     EmployeeServ.remove(Employee)
+      .then((res) => {
         toast('Employee deleted successfully');
-        getEmployees();
+        getEmployee();
         backClick();
       })
       .catch((err) => {
@@ -60,14 +79,15 @@ function AppEmployees() {
       });
   };
 
-  const handleSearch = (text) => {
+  const handleSearch = (val) => {
+    const field='firstname'
     EmployeeServ.find({
       query: {
-        name: {
-          $regex: text,
+        [field]: {
+          $regex: val,
           $options: 'i',
         },
-        facility: user?.currentEmployee?.facilityDetail?._id || '',
+        facility: user?.employeeData[0]?.facilityDetail?._id || '',
         $limit: 100,
         $sort: {
           createdAt: -1,
@@ -75,8 +95,8 @@ function AppEmployees() {
       },
     })
       .then((res) => {
-        setEmployees(res.data);
-        toast('Employee fetched succesfully');
+        setEmployee(res.data);
+       
       })
       .catch((err) => {
         toast('Error updating Employee, probable network issues or ' + err);
@@ -99,12 +119,14 @@ function AppEmployees() {
   };
 
   useEffect(() => {
-    EmployeeServ = client.service('employee');
-    EmployeeServ.on('created', (_) => getEmployees());
-    EmployeeServ.on('updated', (_) => getEmployees());
-    EmployeeServ.on('patched', (_) => getEmployees());
-    EmployeeServ.on('removed', (_) => getEmployees());
-    getEmployees();
+    if (!EmployeeServ) {
+      EmployeeServ = client.service('employee');
+      EmployeeServ.on('created', (_) => getEmployee());
+      EmployeeServ.on('updated', (_) => getEmployee());
+      EmployeeServ.on('patched', (_) => getEmployee());
+      EmployeeServ.on('removed', (_) => getEmployee());
+    }
+    user && getEmployee();
     return () => {
       EmployeeServ = null;
     };

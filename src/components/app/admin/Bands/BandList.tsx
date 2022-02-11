@@ -14,7 +14,7 @@ interface Props {
   handleSearch: (_event) => void;
   onRowClicked?: (
     _row: { id: any; name: string; bandType: string; description: string },
-    _event: any
+    _event: any,
   ) => void;
   items: any[];
 }
@@ -31,11 +31,11 @@ const Bands: React.FC<Props> = ({
 
       <TableMenu>
         <div className="inner-table">
-          <Input
+          {/* <Input
             placeholder="Search here"
             label="Search here"
             onChange={handleSearch}
-          />
+          /> */}
           <DebounceInput
             className="input is-small "
             type="text"
@@ -66,6 +66,7 @@ const Bands: React.FC<Props> = ({
           style={{ overflow: 'hidden' }}
         />
       </div>
+      <ToastContainer />
     </PageWrapper>
   );
 };

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 
 import Button from '../../../buttons/Button';
 import DynamicInput from '../../DynamicInput';
-import { LocationSchema } from '../../schema';
+import { LocationSchema } from '../../schema/ModelSchema';
 import {
   BottomWrapper,
   GrayWrapper,
@@ -71,11 +71,11 @@ const LocationModify: React.FC<Props> = ({
           </GridWrapper>
 
           <BottomWrapper>
-            <Button
+            {/* <Button
               label="Delete Location"
               background="#FFE9E9"
               color="#ED0423"
-            />
+            /> */}
             <Button label="Save Location" />
           </BottomWrapper>
         </form>

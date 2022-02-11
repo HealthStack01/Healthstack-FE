@@ -15,7 +15,8 @@ function AppLocations() {
   const { user } = useContext(UserContext);
   const [locations, setLocations] = useState([]);
   let location = resource.locationResource.selectedLocation;
-
+ 
+ 
   const backClick = () => {
     setResource((prevState) => ({
       ...prevState,
@@ -27,39 +28,77 @@ function AppLocations() {
     getLocations();
   };
 
-  const getLocations = async (text?: string) => {
+  const getLocations = async () => {
+    if (user.currentEmployee) {
+      LocationServ.find({
+        query: {
+          facility: user.currentEmployee.facilityDetail._id,
+          $limit: 200,
+          $sort: {
+            createdAt: -1,
+          },
+        },
+      })
+        .then((res) => {
+          setLocations(res.data);
+          toast('Locations fetched succesfully');
+        })
+        .catch((error) => {
+          toast(error)
+        });
+    } else if (user.stacker) {
+      LocationServ.find({
+        query: {
+          $limit: 200,
+          $sort: {
+            facility: -1,
+          },
+        },
+      })
+        .then((res) => {
+          
+          setLocations(res.data);
+         
+        })
+        .catch((error) => {
+          toast("Error feching locations"+error);
+        });
+    }
+  };
+
+  const handleSearch = (val) => {
+    const field='name'
     LocationServ.find({
       query: {
-        name: text && {
-          $regex: text,
+        [field]: {
+          $regex: val,
           $options: 'i',
         },
-        facility:
-          user.currentEmployee && user.currentEmployee.facilityDetail._id,
-        $limit: 200,
+        facility: user?.employeeData[0]?.facilityDetail?._id || '',
+        $limit: 100,
         $sort: {
-          createdAt: user.currentEmployee && -1,
-          facility: user.stacker && -1,
+          createdAt: -1,
         },
       },
     })
       .then((res) => {
         setLocations(res.data);
-        toast('Location fetched succesfully');
+       
       })
-      .catch((error) => {
-        toast(error);
+      .catch((err) => {
+        toast('Error updating Location, probable network issues or ' + err);
       });
   };
-
   const handleDelete = () => {
+    
+
     LocationServ.remove(location)
-      .then((_) => {
+      .then((res) => {
         toast('Location deleted successfully');
         backClick();
       })
       .catch((err) => {
-        toast(`Error deleting location, probable network issues or ${err}`);
+        toast(`'Error deleting location, probable network issues or ' + err'`);
       });
   };
 
@@ -74,8 +113,10 @@ function AppLocations() {
         backClick();
       })
       .catch((err) => {
-        toast.error(`Error occurred : ${err}`);
+        toast.error(`Error occurred : ${err}`); 
       });
+      
+    
   };
 
   useEffect(() => {
@@ -115,7 +156,7 @@ function AppLocations() {
             }));
           }}
           items={locations}
-          handleSearch={getLocations}
+          handleSearch={handleSearch}
         />
       )}
       {resource.locationResource.show === 'create' && (
@@ -184,4 +225,4 @@ function AppLocations() {
   );
 }
 
-export default AppLocations;
+export default AppLocations

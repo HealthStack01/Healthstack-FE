@@ -13,6 +13,8 @@ function AppBands() {
   let BandServ = client.service('bands');
   const { resource, setResource } = useObjectState();
   const { user } = useContext(UserContext);
+  console.log(user);
+  
   const [bands, setBands] = useState([]);
   let band = resource.bandResource.selectedBand;
 
@@ -24,6 +26,7 @@ function AppBands() {
         show: 'lists',
       },
     }));
+    getBands()
   };
 
   const getBands = async () => {
@@ -37,9 +40,11 @@ function AppBands() {
           },
         },
       })
-        .then((res) => {
+        .then((res) => {console.log(res)
           setBands(res.data);
+          toast('Bands fetched succesfully');
         })
+        
         .catch((error) => {
           console.error({ error });
         });
@@ -53,6 +58,7 @@ function AppBands() {
         },
       })
         .then((res) => {
+          console.log(res)
           setBands(res.data);
           toast('Bands fetched succesfully');
         })
@@ -62,25 +68,30 @@ function AppBands() {
     }
   };
   const handleDelete = () => {
+
+
     BandServ.remove(band)
-      .then((_) => {
+      .then((res) => {
         toast('Band deleted successfully');
         getBands();
         backClick();
       })
       .catch((err) => {
-        toast(`'Error deleting Band, probable network issues or ' + ${err}'`);
+        toast(
+          `'Error deleting Band, probable network issues or ' + ${err}'`
+        );
       });
   };
 
-  const handleSearch = (text) => {
+  const handleSearch = (val) => {
+    const field='name'
     BandServ.find({
       query: {
-        name: {
-          $regex: text,
+        [field]: {
+          $regex: val,
           $options: 'i',
         },
-        facility: user?.currentEmployee?.facilityDetail?._id || '',
+        facility: user?.employeeData[0]?.facilityDetail?._id || '',
         $limit: 100,
         $sort: {
           createdAt: -1,
@@ -98,12 +109,6 @@ function AppBands() {
 
   const onSubmit = (data) => {
     const values = getFormStrings(data._id);
-
-    if (data.bandType === '') {
-      toast('Kindly choose band type');
-      return;
-    }
-
     if (user.currentEmployee) {
       data.facility = user.currentEmployee.facilityDetail._id;
     }
@@ -115,21 +120,21 @@ function AppBands() {
       .catch((err) => {
         toast.error(`Error occurred : ${err}`);
       });
-
-    // console.log(data);
   };
 
   useEffect(() => {
-    BandServ = client.service('bands');
-    BandServ.on('created', (_) => getBands());
-    BandServ.on('updated', (_) => getBands());
-    BandServ.on('patched', (_) => getBands());
-    BandServ.on('removed', (_) => getBands());
-    getBands();
+    if (!BandServ) {
+      BandServ = client.service('bands');
+      BandServ.on('created', (_) => getBands());
+      BandServ.on('updated', (_) => getBands());
+      BandServ.on('patched', (_) => getBands());
+      BandServ.on('removed', (_) => getBands());
+    }
+   user && getBands();
     return () => {
       BandServ = null;
     };
-  }, []);
+  }, [user]);
 
   return (
     <>
