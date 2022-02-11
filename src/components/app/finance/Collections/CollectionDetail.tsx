@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 
 import AccordionBox from '../../../accordion';
 import Button from '../../../buttons/Button';
-import { CollectionSchema } from '../../ModelSchema';
+import { CollectionSchema } from '../../schema';
 import {
   FullDetailsWrapper,
   GrayWrapper,
@@ -11,7 +11,6 @@ import {
   HeadWrapper,
   PageWrapper,
 } from '../../styles';
-import { columnHead } from './data';
 
 interface Props {
   editBtnClicked?: () => void;
@@ -23,7 +22,7 @@ interface Props {
 }
 
 const CollectionDetails: React.FC<Props> = ({
-  row,
+  row: _row,
   backClick,
   bal,
   credit,

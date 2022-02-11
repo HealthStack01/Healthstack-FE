@@ -2,10 +2,10 @@ import React from 'react';
 import DataTable from 'react-data-table-component';
 import { DebounceInput } from 'react-debounce-input';
 import { ToastContainer } from 'react-toastify';
+
 import { TableMenu } from '../../../../styles/global';
-import Button from '../../../buttons/Button';
 import Input from '../../../inputs/basic/Input';
-import { CollectionSchema } from '../../ModelSchema';
+import { CollectionSchema } from '../../schema';
 import { PageWrapper } from '../../styles';
 
 interface Props {

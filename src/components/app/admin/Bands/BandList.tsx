@@ -1,12 +1,11 @@
 import React from 'react';
 import DataTable from 'react-data-table-component';
 import { DebounceInput } from 'react-debounce-input';
-import { ToastContainer } from 'react-toastify';
 
 import { TableMenu } from '../../../../styles/global';
 import Button from '../../../buttons/Button';
 import Input from '../../../inputs/basic/Input';
-import { BandSchema } from '../../ModelSchema';
+import { BandSchema } from '../../schema';
 import { PageWrapper } from '../../styles';
 
 interface Props {
@@ -14,7 +13,7 @@ interface Props {
   handleSearch: (_event) => void;
   onRowClicked?: (
     _row: { id: any; name: string; bandType: string; description: string },
-    _event: any,
+    _event: any
   ) => void;
   items: any[];
 }
@@ -66,7 +65,6 @@ const Bands: React.FC<Props> = ({
           style={{ overflow: 'hidden' }}
         />
       </div>
-      <ToastContainer />
     </PageWrapper>
   );
 };
