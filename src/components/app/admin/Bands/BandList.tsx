@@ -31,11 +31,7 @@ const Bands: React.FC<Props> = ({
 
       <TableMenu>
         <div className="inner-table">
-          {/* <Input
-            placeholder="Search here"
-            label="Search here"
-            onChange={handleSearch}
-          /> */}
+         
           <DebounceInput
             className="input is-small "
             type="text"

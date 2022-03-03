@@ -71,11 +71,7 @@ const LocationModify: React.FC<Props> = ({
           </GridWrapper>
 
           <BottomWrapper>
-            {/* <Button
-              label="Delete Location"
-              background="#FFE9E9"
-              color="#ED0423"
-            /> */}
+           
             <Button label="Save Location" />
           </BottomWrapper>
         </form>

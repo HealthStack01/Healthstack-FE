@@ -13,7 +13,7 @@ function AppBands() {
   let BandServ = client.service('bands');
   const { resource, setResource } = useObjectState();
   const { user } = useContext(UserContext);
-  console.log(user);
+  
   
   const [bands, setBands] = useState([]);
   let band = resource.bandResource.selectedBand;
@@ -40,7 +40,7 @@ function AppBands() {
           },
         },
       })
-        .then((res) => {console.log(res)
+        .then((res) => {
           setBands(res.data);
           toast('Bands fetched succesfully');
         })
@@ -91,7 +91,7 @@ function AppBands() {
           $regex: val,
           $options: 'i',
         },
-        facility: user?.employeeData[0]?.facilityDetail?._id || '',
+        facility: user?.currentEmployee?.facilityDetail?._id || '',
         $limit: 100,
         $sort: {
           createdAt: -1,
