@@ -50,7 +50,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start:dev": "react-scripts start",
     "start:prod": "yarn build && serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test",
