@@ -2,19 +2,18 @@ import React from 'react';
 import DataTable from 'react-data-table-component';
 import { DebounceInput } from 'react-debounce-input';
 import { ToastContainer } from 'react-toastify';
-
 import { TableMenu } from '../../../../styles/global';
 import Button from '../../../buttons/Button';
 import Input from '../../../inputs/basic/Input';
-import { LocationSchema } from '../../schema';
 import { PageWrapper } from '../../styles';
+import { LocationSchema } from '../../schema/ModelSchema';
 
 interface Props {
   handleCreate?: () => void;
   handleSearch: (_event) => void;
   onRowClicked?: (
     _row: { id: any; name: string; locationType: string },
-    _: any
+    _: any,
   ) => void;
   items: any[];
 }
@@ -31,11 +30,7 @@ const Locations: React.FC<Props> = ({
 
       <TableMenu>
         <div className="inner-table">
-          <Input
-            placeholder="Search here"
-            label="Search here"
-            onChange={handleSearch}
-          />
+         
           <DebounceInput
             className="input is-small "
             type="text"
