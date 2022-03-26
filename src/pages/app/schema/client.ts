@@ -762,5 +762,111 @@ const ClientFullSchema = {
     },
   ],
 };
+const BillPrescriptionSentDetailsSchema = [
+  {
+    name: 'ID',
+    key: '_id',
+    selector: (row) => row._id && row._id.substring(0, 7),
+    description: 'ID',
+    sortable: true,
+    required: true,
+    inputType: InputType.HIDDEN,
+  },
+  {
+    name: 'Medication',
+    key: 'medication',
+    description: 'Search for Medicine',
+    selector: (row) => row.medication,
+    sortable: true,
+    required: true,
+    inputType: InputType.SELECT_AUTO_SUGGEST,
+    options: {
+      model: Models.MEDICATION_HELPER,
+      field: 'medication',
+      labelSelector: (obj) => `${obj.medication}`,
+      valueSelector: (obj) => obj.medication,
+      extraFields: {
+        instruction: 'instruction',
+      },
+    },
+  },
+  [
+    {
+      name: 'Quantity',
+      description: 'Enter quantity',
+      key: 'quantity',
+      selector: (row) => row.quantity,
+      sortable: true,
+      required: true,
+      inputType: InputType.TEXT,
+    },
 
-export { AppointmentSchema, ClientFullSchema, ClientMiniSchema };
+    {
+      name: 'Amount',
+      description: 'Enter description',
+      key: 'amount',
+      selector: (row) => row.amount,
+      sortable: true,
+      required: true,
+      inputType: InputType.TEXT,
+    },
+  ],
+];
+
+const DispensaryCreateSchema = [
+  {
+    name: 'ID',
+    key: '_id',
+    selector: (row) => row._id && row._id.substring(0, 7),
+    description: 'ID',
+    sortable: true,
+    required: true,
+    inputType: InputType.HIDDEN,
+  },
+  {
+    name: 'Medication',
+    key: 'medication',
+    description: 'Search for Medicine',
+    selector: (row) => row.name,
+    sortable: true,
+    required: true,
+    inputType: InputType.SELECT_AUTO_SUGGEST,
+    options: {
+      model: Models.INVENTORY,
+      labelSelector: (obj) => obj.name,
+      valueSelector: (obj) => obj.storeId,
+      extraFields: {
+        instruction: 'instruction',
+      },
+    },
+  },
+  [
+    {
+      name: 'Quantity',
+      description: 'Enter quantity',
+      key: 'quantity',
+      selector: (row) => row.quantity,
+      sortable: true,
+      required: true,
+      inputType: InputType.TEXT,
+    },
+
+    {
+      name: 'Amount',
+      description: 'Enter Price',
+      key: 'amount',
+      selector: (row) => row.amount,
+      sortable: true,
+      required: true,
+      inputType: InputType.TEXT,
+    },
+  ],
+];
+
+export {
+  AppointmentSchema,
+  BillPrescriptionSentDetailsSchema,
+  ClientFullSchema,
+  ClientMiniSchema,
+  DispensaryCreateSchema,
+};

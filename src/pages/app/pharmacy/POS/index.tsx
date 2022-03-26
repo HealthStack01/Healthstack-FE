@@ -1,36 +1,43 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 
+import useRepository from '../../../../components/hooks';
 import { useObjectState } from '../../../../context/context';
+import { Models, Views } from '../../Constants';
+import { ProductEntryQuery } from '../../pharmacy/ProductEntry/query';
 import POSCreate from './POSCreate';
-import POSDetails from './POSDetail';
-import POS from './POSList';
+import ProductEntryDetails from './POSDetail';
+import ProductEntryList from './POSList';
 import POSModify from './POSModify';
 
 const AppPOS = () => {
   const { resource, setResource } = useObjectState();
+  const {
+    employeeResource: { show, selectedEmployee },
+  } = resource;
 
+  const navigate = (show: string) => (selectedEmployee?: any) =>
+    setResource({
+      ...resource,
+      employeeResource: {
+        ...resource.appointmentResource,
+        show,
+        selectedEmployee: selectedEmployee || resource.employeeResource.selectedEmployee,
+      },
+    });
+
+  const { list: productentry, setFindQuery } = useRepository(Models.PRODUCTENTRY, navigate);
+  const [searchText, setSearchText] = useState('');
+  useEffect(() => {
+    setFindQuery(ProductEntryQuery(undefined, undefined, searchText || undefined));
+  }, [searchText]);
   return (
     <>
-      {resource.employeeResource.show === 'lists' && (
-        <POS
-          handleCreate={() =>
-            setResource((prevState) => ({
-              ...prevState,
-              employeeResource: {
-                ...prevState.employeeResource,
-                show: 'create',
-              },
-            }))
-          }
-          onRowClicked={(row, _event) => {
-            setResource((prevState) => ({
-              ...prevState,
-              employeeResource: {
-                show: 'details',
-                selectedEmployee: row,
-              },
-            }));
-          }}
+      {show === Views.LIST && (
+        <ProductEntryList
+          onRowClicked={(row) => navigate(Views.DETAIL)(row)}
+          onSearch={setSearchText}
+          items={productentry}
+          handleCreate={undefined}
         />
       )}
       {resource.employeeResource.show === 'create' && (
@@ -46,29 +53,7 @@ const AppPOS = () => {
           }
         />
       )}
-      {resource.employeeResource.show === 'details' && (
-        <POSDetails
-          row={resource.employeeResource.selectedEmployee}
-          backClick={() =>
-            setResource((prevState) => ({
-              ...prevState,
-              employeeResource: {
-                ...prevState.employeeResource,
-                show: 'lists',
-              },
-            }))
-          }
-          editBtnClicked={() =>
-            setResource((prevState) => ({
-              ...prevState,
-              employeeResource: {
-                ...prevState.employeeResource,
-                show: 'edit',
-              },
-            }))
-          }
-        />
-      )}
+      {show === Views.DETAIL && <ProductEntryDetails row={selectedEmployee} backClick={navigate(Views.LIST)} />}
       {resource.employeeResource.show === 'edit' && (
         <POSModify
           row={resource.employeeResource.selectedEmployee}

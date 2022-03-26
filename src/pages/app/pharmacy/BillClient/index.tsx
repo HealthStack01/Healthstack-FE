@@ -1,36 +1,45 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 
+import useRepository from '../../../../components/hooks';
 import { useObjectState } from '../../../../context/context';
+import { Models, Views } from '../../Constants';
 import BillCreate from './BillCreate';
 import BillDetails from './BillDetail';
 import BillClient from './BillList';
 import BillModify from './BillModify';
+import { BillClientQuery } from './query';
 
 const AppBillClient = () => {
   const { resource, setResource } = useObjectState();
 
+  const {
+    billClientResource: { show, selectedBillClient },
+  } = resource;
+
+  const navigate = (show: string) => (selectedBillClient?: any) =>
+    setResource({
+      ...resource,
+      billClientResource: {
+        ...resource.billClientResource,
+        show,
+        selectedBillClient: selectedBillClient || resource.billClientResource.selectedBillClient,
+      },
+    });
+
+  const { groupedData: billclient, submit: handleSubmit, setFindQuery } = useRepository(Models.BILLS, navigate);
+  const [searchText, setSearchText] = useState('');
+  useEffect(() => {
+    setFindQuery(BillClientQuery(undefined, searchText || undefined));
+  }, [searchText]);
+
   return (
     <>
-      {resource.billClientResource.show === 'lists' && (
+      {show === Views.LIST && (
         <BillClient
-          handleCreate={() =>
-            setResource((prevState) => ({
-              ...prevState,
-              billClientResource: {
-                ...prevState.billClientResource,
-                show: 'create',
-              },
-            }))
-          }
-          onRowClicked={(row, _event) => {
-            setResource((prevState) => ({
-              ...prevState,
-              billClientResource: {
-                show: 'details',
-                selectedBillClient: row,
-              },
-            }));
-          }}
+          onRowClicked={(row) => navigate(Views.DETAIL)(row)}
+          onSearch={setSearchText}
+          items={billclient}
+          handleCreate={undefined}
         />
       )}
       {resource.billClientResource.show === 'create' && (

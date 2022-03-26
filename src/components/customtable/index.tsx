@@ -72,6 +72,8 @@ const CustomTable: React.FC<Props> = ({
   dense = false,
   selectable = false,
 }) => {
+  console.debug(data);
+
   return (
     <DataTable
       title={title}

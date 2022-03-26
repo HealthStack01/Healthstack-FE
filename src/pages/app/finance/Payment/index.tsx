@@ -204,6 +204,7 @@ const AppPayments = () => {
           }
           handleAccept={handleAccept}
           amountBalance={balance}
+          onSubmit={undefined}
         />
       )}
     </>

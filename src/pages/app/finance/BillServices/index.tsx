@@ -55,10 +55,9 @@ const AppBills = () => {
   };
 
   const handleSearch = (val) => {
-    const field = 'name';
     BillServ.find({
       query: {
-        [field]: {
+        'participantInfo.paymentmode.detail.principalName': {
           $regex: val,
           $options: 'i',
         },
