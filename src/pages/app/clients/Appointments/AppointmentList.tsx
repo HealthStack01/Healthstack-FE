@@ -4,6 +4,7 @@ import FilterMenu from '../../../../components/utilities/FilterMenu';
 import { TableMenu } from '../../../../ui/styled/global';
 import { PageWrapper } from '../../styles';
 
+
 const Appointments = ({
   schema,
   handleCreate,
@@ -20,6 +21,7 @@ const Appointments = ({
             <FilterMenu schema={schema.flat()} onSearch={onSearch} />
           </div>
 
+          
           <Button onClick={handleCreate}>
             <i className="bi bi-plus-circle"></i> Add new
           </Button>
