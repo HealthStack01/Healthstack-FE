@@ -22,9 +22,9 @@ const AppProductEntry = () => {
       productEntryResource: {
         ...resource.productEntryResource,
         show,
-        selectedProductEntry:
-          selectedProductEntry ||
-          resource.productEntryResource.selectedProductEntry,
+        selectedProductEntry: selectedProductEntry?._id
+          ? selectedProductEntry
+          : resource.productEntryResource.selectedProductEntry,
       },
     });
   const [searchText, setSearchText] = useState('');
@@ -40,7 +40,7 @@ const AppProductEntry = () => {
 
   useEffect(() => {
     setFindQuery(
-      productEntryQuery(facility?._id, location?._id, searchText || undefined),
+      productEntryQuery(facility?._id, location?._id, searchText || undefined)
     );
   }, []);
 
@@ -66,6 +66,7 @@ const AppProductEntry = () => {
           selectedData={selectedProductEntry}
         />
       )}
+
       {resource.productEntryResource.show === FormType.DETAIL && (
         <DetailView
           title="Product Entry"
