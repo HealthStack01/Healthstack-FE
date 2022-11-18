@@ -82,11 +82,11 @@ const PharmacyDashboard = () => {
    */
   const { modelResult } = ModelResult(billsService);
 
-  console.log("model data ===>", {
-    modelResult: modelResult,
-    monthNameForCurrentYear: monthNameForCurrentYear,
-    pharmacySaleValueSeriesData: pharmacyLineSeriesData,
-  });
+  // console.log("model data ===>", {
+  //   modelResult: modelResult,
+  //   monthNameForCurrentYear: monthNameForCurrentYear,
+  //   pharmacySaleValueSeriesData: pharmacyLineSeriesData,
+  // });
 
   useEffect(() => {
     const { userFullName, facilityFullName } = userDetails();
@@ -121,7 +121,7 @@ const PharmacyDashboard = () => {
             dataSource={prescriptionBilledPresentDataObject}
             isLoading={isSentLoading}
           />
-          <ViewCard count={`${fetchTotalStockQuantity}K`} title="Total Stock" />
+          <ViewCard count={`${fetchTotalStockQuantity}`} title="Total Stock" />
         </StartCardWapper>
 
         <DashboardContainer>
@@ -177,7 +177,7 @@ const PharmacyDashboard = () => {
             <Box sx={{ width: "100%", p: 2, mb: 5 }}>
               <StartCardWapper>
                 <ViewCard
-                  count={`${fetchTotalSalePharmacy}K`}
+                  count={`₦${fetchTotalSalePharmacy}`}
                   title="Total Sales"
                 />
               </StartCardWapper>

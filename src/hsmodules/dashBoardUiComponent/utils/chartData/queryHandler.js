@@ -396,7 +396,11 @@ export const FetchTotalStockValue = (service) => {
   fetchTotalQuantity.map((data) => {
     return (fetchTotalStockValue += data.stockvalue);
   });
-  return { fetchTotalStockValue: Math.ceil(fetchTotalStockValue) };
+  return {
+    fetchTotalStockValue: ConvertAmountToHaveComma(
+      Math.ceil(fetchTotalStockValue)
+    ),
+  };
 };
 
 export const FetchTotalStockQuantity = (service) => {
@@ -405,6 +409,11 @@ export const FetchTotalStockQuantity = (service) => {
   fetchTotalQuantity.map((data) => {
     return (total += data.quantity);
   });
-  const fetchTotalStockQuantity = Math.ceil(total);
+  const result = Math.ceil(total);
+  const fetchTotalStockQuantity = ConvertAmountToHaveComma(result);
   return { fetchTotalStockQuantity };
+};
+
+export const ConvertAmountToHaveComma = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };

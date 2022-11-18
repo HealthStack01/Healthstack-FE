@@ -1,25 +1,14 @@
 import { useState, useEffect } from "react";
 
-const useFetchData = (service, query, isFacilityId) => {
+const useFetchData = (service, query) => {
   const [data, setData] = useState([]);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
 
-  const userDetails = localStorage.getItem("user");
-
-  const facilityId = JSON.parse(userDetails).employeeData[0].facility;
-  const queryObj =
-    isFacilityId === true
-      ? {
-          ...query,
-          $limit: 1000,
-        }
-      : { ...query, facility: facilityId, $limit: 1000 };
-
   useEffect(() => {
     service
       .find({
-        query: queryObj,
+        query: { ...query, $limit: 1000 },
       })
       .then((result) => {
         // Once both return, update the stat
@@ -39,7 +28,7 @@ const useFetchData = (service, query, isFacilityId) => {
     service.on("created", (data) =>
       setData((currentData) => currentData.concat(data))
     );
-  }, [service, facilityId]);
+  }, [service]);
 
   return { data, isPending, error };
 };

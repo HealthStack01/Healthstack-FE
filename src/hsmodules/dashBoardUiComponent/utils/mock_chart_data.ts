@@ -75,14 +75,14 @@ export const columnSeries = [
     name: "PRODUCT B",
     data: [13, 23, 20, 8, 13, 27],
   },
-  {
-    name: "PRODUCT C",
-    data: [11, 17, 15, 15, 21, 14],
-  },
-  {
-    name: "PRODUCT D",
-    data: [21, 7, 25, 13, 22, 8],
-  },
+  // {
+  //   name: "PRODUCT C",
+  //   data: [11, 17, 15, 15, 21, 14],
+  // },
+  // {
+  //   name: "PRODUCT D",
+  //   data: [21, 7, 25, 13, 22, 8],
+  // },
 ];
 
 export const horizontalSeries = [
@@ -102,13 +102,13 @@ export const horizontalSeries = [
 
 export const lineSeries = [
   {
-    name: "2022",
+    name: "Series Name",
     data: [31, 40, 28, 51, 42, 109, 100, 30, 20, 60, 50, 10],
   },
-  {
-    name: "series2",
-    data: [11, 32, 45, 32, 34, 52, 41],
-  },
+  // {
+  //   name: "series2",
+  //   data: [11, 32, 45, 32, 34, 52, 41],
+  // },
 ];
 
 export const mixedSeries = [

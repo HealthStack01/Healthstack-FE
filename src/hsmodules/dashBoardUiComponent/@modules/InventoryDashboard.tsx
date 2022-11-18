@@ -92,8 +92,8 @@ const InventoryDashboard = () => {
             count={fetchTotalClientAtPharmacy}
             title="Patients Count At Pharmacy"
           />
-          <ViewCard count={`${fetchTotalSalePharmacy}K`} title="Total Sales" />
-          <ViewCard count={`${fetchTotalStockValue}K`} title="Total Stock" />
+          <ViewCard count={`₦${fetchTotalSalePharmacy}`} title="Total Sales" />
+          <ViewCard count={`₦${fetchTotalStockValue}`} title="Total Stock" />
         </StartCardWapper>
 
         <DashboardContainer>

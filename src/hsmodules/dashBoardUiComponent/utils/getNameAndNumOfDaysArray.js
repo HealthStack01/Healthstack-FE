@@ -47,5 +47,6 @@ export const getDayIntheOtherMonth = () => {
   return {
     monthNameForCurrentYear,
     numOfDayInmonthForCurrentYear,
+    currentYear,
   };
 };

@@ -2,6 +2,7 @@ import useFetch from "../usefetch";
 import { paymentTotal } from "./queryHandler";
 import useFetchData from "../useFetchData";
 import useFetchOrder from "../usefetchOrder";
+import { ConvertAmountToHaveComma } from "./queryHandler";
 const userDetails = localStorage.getItem("user");
 
 const facilityId = JSON.parse(userDetails).employeeData[0].facility;
@@ -11,6 +12,8 @@ export const TotalNumOfData = (service) => {
     $sort: { createdAt: -1 },
   };
   const { data, isPending, error } = useFetch(service, query);
+
+  // console.log("allClientData", data);
   let totalValue = Number(data.total);
   let err = error;
   return {
@@ -72,10 +75,13 @@ export const TotalNumOfOtherGenderClient = (service) => {
 export const TotalUpcomingAppointment = (service) => {
   const query = {
     $sort: { createdAt: -1 },
-    appoint_status: "pending",
+    $select: ["appointment_status"],
+    appointment_status: "Scheduled",
   };
+
   const { data, isPending, error } = useFetch(service, query);
 
+  console.log("appoint ", data);
   let totalUpcomingAppointment = Number(data.total);
   let err = error;
   return {
@@ -133,6 +139,7 @@ export const ClientPaymentMode = (service) => {
   const query = {
     $sort: { createdAt: -1 },
     $select: ["createdAt", "paymentinfo"],
+    facility: facilityId,
   };
   const { data, isPending, error } = useFetchData(service, query);
   let queryResults = data;
@@ -176,6 +183,7 @@ export const FetchTotalDataForDischargedPatient = (service) => {
   const query = {
     $sort: { end_time: -1 },
     $select: ["end_time", "start_time"],
+    facility: facilityId,
     end_time: {
       $lt: new Date().getTime(),
     },
@@ -213,6 +221,7 @@ export const TotalPaymentMode = (service) => {
   const query = {
     $sort: { createdAt: -1 },
     $select: ["createdAt", "paymentinfo"],
+    facility: facilityId,
   };
   const { data, isPending, error } = useFetchData(service, query);
   let queryResults = data;
@@ -237,6 +246,7 @@ export const TotalServiceData = (service, selectQuery) => {
   const query = {
     $sort: { createdAt: -1 },
     $select: [selectQuery],
+    facility: facilityId,
   };
   const { data, isPending, error } = useFetchData(service, query);
   let totalServiceData = data;
@@ -269,6 +279,7 @@ export const FetchLocationWard = (service) => {
     $sort: { createdAt: -1 },
     $select: ["sublocations", "locationType"],
     locationType: "Ward",
+    facility: facilityId,
   };
   const { data, isPending, error } = useFetchData(service, query);
   let fetchLocationWard = data;
@@ -364,6 +375,7 @@ export const FetchTotalDataWithInPresentRange = (service, gt_HRs, gt_Days) => {
   const query = {
     $sort: { createdAt: -1 },
     $select: ["createdAt", "start_time"],
+    facility: facilityId,
     start_time: {
       $gt: new Date().getTime() - GT_MS,
       $lt: new Date().getTime(),
@@ -468,6 +480,7 @@ export const FetchOrderByDestination = (service) => {
     // $select: ["createdAt", "destination"],
     order_status: "Fully Paid",
     $select: ["createdAt", "order_status"],
+    order_category: "Prescription",
   };
   const {
     data: totalOrderByDestination,
@@ -495,6 +508,7 @@ export const FetchTotalPrescriptionOrderWithInPresentRange = (
   const query = {
     $sort: { createdAt: -1 },
     $select: ["createdAt"],
+    order_category: "Prescription",
     createdAt: {
       $gt: new Date().getTime() - GT_MS,
       $lt: new Date().getTime(),
@@ -523,6 +537,7 @@ export const FetchTotalPrescriptionBilledWithInPresentRange = (
     $sort: { createdAt: -1 },
     $select: ["createdAt", "order_status"],
     order_status: "Billed",
+    order_category: "Prescription",
     createdAt: {
       $gt: new Date().getTime() - GT_MS,
       $lt: new Date().getTime(),
@@ -550,6 +565,7 @@ export const FetchTotalPrescriptionPendingWithInPresentRange = (
   const query = {
     $sort: { createdAt: -1 },
     $select: ["createdAt", "order_status"],
+    order_category: "Prescription",
     order_status: "Pending",
     createdAt: {
       $gt: new Date().getTime() - GT_MS,
@@ -579,6 +595,7 @@ export const FetchTotalPrescriptionFullyPaidWithInPresentRange = (
     $sort: { createdAt: -1 },
     $select: ["createdAt", "order_status"],
     order_status: "Fully Paid",
+    order_category: "Prescription",
     createdAt: {
       $gt: new Date().getTime() - GT_MS,
       $lt: new Date().getTime(),
@@ -601,12 +618,13 @@ export const FetchTotalSalePharmacy = (service) => {
     "orderInfo.orderObj.order_category": "Prescription",
   };
 
-  const { data, isPending, error } = useFetchData(service, query, true);
+  const { data, isPending, error } = useFetchData(service, query);
   var total = 0;
   data.map((dat) => {
     return (total += dat.paymentInfo.amountpaid);
   });
-  const fetchTotalSalePharmacy = Math.ceil(total);
+  const result = Math.ceil(total);
+  const fetchTotalSalePharmacy = ConvertAmountToHaveComma(result);
 
   let err = error;
   return {
@@ -628,6 +646,7 @@ export const FetchTotalQuantity = (service) => {
     error,
   } = useFetchData(service, query);
 
+  // const fetchTotalQuantity = ConvertAmountToHaveComma(dat);
   let err = error;
   return {
     fetchTotalQuantity,
@@ -653,12 +672,13 @@ export const FetchTotalStockValueWithInPresentRange = (
       $lt: new Date().getTime(),
     },
   };
-  const { data, isPending, error } = useFetchData(service, query, true);
+  const { data, isPending, error } = useFetchData(service, query);
   var total = 0;
   data.map((dat) => {
     return (total += dat.stockvalue);
   });
-  const totalDataWithInARange = Math.ceil(total);
+  const result = Math.ceil(total);
+  const totalDataWithInARange = `₦${ConvertAmountToHaveComma(result)}`;
 
   // console.log("test", { total: total, data: data });
 
@@ -687,12 +707,13 @@ export const FetchTotalMoneyCollectedWithInPresentRange = (
     },
   };
 
-  const { data, isPending, error } = useFetchData(service, query, true);
+  const { data, isPending, error } = useFetchData(service, query);
   var total = 0;
   data.map((dat) => {
     return (total += dat.paymentInfo.amountpaid);
   });
-  const totalDataWithInARange = Math.ceil(total);
+  const result = Math.ceil(total);
+  const totalDataWithInARange = `₦${ConvertAmountToHaveComma(result)}`;
 
   let err = error;
   return {
@@ -720,12 +741,13 @@ export const FetchTotalSaleValueWithInPresentRange = (
       $lt: new Date().getTime(),
     },
   };
-  const { data, isPending, error } = useFetchData(service, query, true);
+  const { data, isPending, error } = useFetchData(service, query);
   var total = 0;
   data.map((dat) => {
     return (total += dat.paymentInfo.amountpaid);
   });
-  const totalDataWithInARange = Math.ceil(total);
+  const result = Math.ceil(total);
+  const totalDataWithInARange = `₦${ConvertAmountToHaveComma(result)}`;
 
   let err = error;
   return {
@@ -742,9 +764,9 @@ export const FetchTotalClientAtPharmacy = (service) => {
     "orderInfo.orderObj.order_category": "Prescription",
   };
 
-  const { data, isPending, error } = useFetchData(service, query, true);
+  const { data, isPending, error } = useFetchData(service, query);
 
-  var fetchTotalClientAtPharmacy = data.length;
+  var fetchTotalClientAtPharmacy = `${ConvertAmountToHaveComma(data.length)}`;
   let err = error;
   return {
     fetchTotalClientAtPharmacy,
@@ -770,7 +792,7 @@ export const FetchTotalStockQuantityWithInPresentRange = (
       $lt: new Date().getTime(),
     },
   };
-  const { data, isPending, error } = useFetchData(service, query, true);
+  const { data, isPending, error } = useFetchData(service, query);
   var total = 0;
   data.map((dat) => {
     return (total += dat.quantity);
@@ -790,6 +812,7 @@ export const FetchTotalStockQuantityWithInPresentRange = (
 export const FetchTotalSuppiedProduct = (service) => {
   const query = {
     $sort: { createdAt: -1 },
+    facility: facilityId,
   };
 
   const { data, isPending, error } = useFetchData(service, query);
@@ -798,7 +821,8 @@ export const FetchTotalSuppiedProduct = (service) => {
   data.map((dat) => {
     return (total += dat.productitems[0].quantity);
   });
-  const fetchTotalSuppiedProduct = Math.ceil(total);
+  const result = Math.ceil(total);
+  const fetchTotalSuppiedProduct = `${ConvertAmountToHaveComma(result)}`;
 
   let err = error;
   return {
@@ -814,7 +838,7 @@ export const FetchTotalRevenue = (service) => {
     "participantInfo.billingFacility": facilityId,
   };
 
-  const { data, isPending, error } = useFetchData(service, query, true);
+  const { data, isPending, error } = useFetchData(service, query);
   var total = 0;
   data.map((dat) => {
     return (total += dat.paymentInfo.amountpaid);
@@ -835,7 +859,7 @@ export const FetchTotalBalance = (service) => {
     "participantInfo.billingFacility": facilityId,
   };
 
-  const { data, isPending, error } = useFetchData(service, query, true);
+  const { data, isPending, error } = useFetchData(service, query);
   var total = 0;
   data.map((dat) => {
     return (total += dat.paymentInfo.balance);
@@ -850,40 +874,269 @@ export const FetchTotalBalance = (service) => {
   };
 };
 
+/** query for laboratory */
 export const FetchDataByQuery = (service, query) => {
   const {
-    data: modelResult,
+    data: fetchDataByQuery,
     isPending,
     error,
   } = useFetchData(service, query, true);
 
   let err = error;
   return {
-    modelResult,
+    fetchDataByQuery,
+    isPending,
+    err,
+  };
+};
+
+export const TotalLabOrderPending = (service) => {
+  const query = {
+    $sort: { createdAt: -1 },
+    // $select: ["createdAt", "order_category"],
+    destination: facilityId,
+    order_category: "Laboratory",
+    fulfilled: "False",
+  };
+
+  const { data, isPending, error } = useFetchData(service, query);
+
+  const totalLabOrderPending = data.length;
+  let err = error;
+  return {
+    totalLabOrderPending,
+    isPending,
+    err,
+  };
+};
+
+export const TotalLabReportPending = (service) => {
+  const query = {
+    $sort: { createdAt: -1 },
+    facility: facilityId,
+    status: "Draft",
+  };
+
+  const { data, isPending, error } = useFetchData(service, query);
+
+  let err = error;
+  const totalLabReportPending = data.length;
+  return {
+    totalLabReportPending,
+    isPending,
+    err,
+  };
+};
+
+export const FetchTotalLabOrderReceivedWithInPresentRange = (
+  service,
+  gt_HRs,
+  gt_Days
+) => {
+  const GT_HR_MS = 60 * 60 * 1000 * gt_HRs;
+  const GT_Days_MS = 24 * 60 * 60 * 1000 * gt_Days;
+  const GT_MS = GT_HR_MS + GT_Days_MS;
+
+  const query = {
+    $sort: { createdAt: -1 },
+    destination: facilityId,
+    order_category: "Laboratory",
+    createdAt: {
+      $gt: new Date().getTime() - GT_MS,
+      $lt: new Date().getTime(),
+    },
+  };
+  const { data, isPending, error } = useFetchData(service, query);
+
+  // console.log("data", { data: data });
+  const totalDataWithInARange = ConvertAmountToHaveComma(data.length);
+
+  let err = error;
+  return {
+    totalDataWithInARange,
+    isPending,
+    err,
+  };
+};
+
+export const FetchTotalLabReportWithInPresentRange = (
+  service,
+  gt_HRs,
+  gt_Days
+) => {
+  const GT_HR_MS = 60 * 60 * 1000 * gt_HRs;
+  const GT_Days_MS = 24 * 60 * 60 * 1000 * gt_Days;
+  const GT_MS = GT_HR_MS + GT_Days_MS;
+
+  const query = {
+    $sort: { createdAt: -1 },
+    facility: facilityId,
+    status: "Draft",
+    createdAt: {
+      $gt: new Date().getTime() - GT_MS,
+      $lt: new Date().getTime(),
+    },
+  };
+  const { data, isPending, error } = useFetchData(service, query);
+
+  // console.log("data", { data: data });
+  const totalDataWithInARange = ConvertAmountToHaveComma(data.length);
+
+  let err = error;
+  return {
+    totalDataWithInARange,
+    isPending,
+    err,
+  };
+};
+
+export const ColumnDataSeries = (service) => {
+  const query = {
+    $sort: { createdAt: -1 },
+    $select: ["createdAt", "paymentinfo"],
+    facility: facilityId,
+  };
+  const { data, isPending, error } = useFetchData(service, query);
+  let queryResults = data;
+
+  let { paymentModeData } = paymentTotal(queryResults);
+  let err = error;
+
+  var columnDataSeries = [
+    {
+      name: "mode of payment",
+      data: paymentModeData,
+    },
+  ];
+  return {
+    columnDataSeries,
+    isPending,
+    err,
+  };
+};
+
+export const TotalRadOrderReceived = (service) => {
+  const query = {
+    $sort: { createdAt: -1 },
+    $select: ["createdAt", "order_category"],
+    destination: facilityId,
+    order_category: "Radiology Order",
+  };
+
+  const { data, isPending, error } = useFetchData(service, query);
+
+  let err = error;
+  return {
+    totalRadOrderReceived: data.length,
+    isPending,
+    err,
+  };
+};
+
+export const TotalRadPendingOrder = (service) => {
+  const query = {
+    $sort: { createdAt: -1 },
+    destination: facilityId,
+    order_category: "Radiology Order",
+    fulfilled: "False",
+  };
+
+  const { data, isPending, error } = useFetchData(service, query);
+
+  let err = error;
+  return {
+    totalRadPendingOrder: data.length,
+    isPending,
+    err,
+  };
+};
+
+export const TotalRadCheckIn = (service) => {
+  const query = {
+    $sort: { createdAt: -1 },
+    $select: ["createdAt", "appointment_status"],
+    facility: facilityId,
+    appointment_status: "Checked In",
+  };
+
+  const { data, isPending, error } = useFetchData(service, query);
+
+  let err = error;
+  return {
+    totalRadCheckIn: data.length,
+    isPending,
+    err,
+  };
+};
+
+export const TotalRadDraftResult = (service) => {
+  const query = {
+    $sort: { createdAt: -1 },
+    "participantInfo.billingFacility": facilityId,
+    report_status: "Draft",
+    "orderInfo.orderObj.order_category": "Radiology Order",
+  };
+
+  const { data, isPending, error } = useFetchData(service, query);
+
+  let err = error;
+  return {
+    totalRadDraftResult: data.length,
+    isPending,
+    err,
+  };
+};
+
+export const TotalRadFinalResult = (service) => {
+  const query = {
+    $sort: { createdAt: -1 },
+    "participantInfo.billingFacility": facilityId,
+    report_status: "Final",
+    "orderInfo.orderObj.order_category": "Radiology Order",
+  };
+
+  const { data, isPending, error } = useFetchData(service, query);
+
+  let err = error;
+  return {
+    totalRadFinalResult: data.length,
+    isPending,
+    err,
+  };
+};
+
+export const TotalRadPendingResult = (service) => {
+  const query = {
+    $sort: { createdAt: -1 },
+    "participantInfo.billingFacility": facilityId,
+    report_status: "Pending",
+    "orderInfo.orderObj.order_category": "Radiology Order",
+  };
+
+  const { data, isPending, error } = useFetchData(service, query);
+
+  let err = error;
+  return {
+    totalRadPendingResult: data.length,
     isPending,
     err,
   };
 };
 
 export const ModelResult = (service) => {
-  //bill
-  // const query = {
-  //   $sort: { createdAt: -1 },
-  //   "participantInfo.billingFacility": facilityId,
-  // };
-
   const query = {
     $sort: { createdAt: -1 },
-    // $select: ["createdAt", "order_category"],
-    destination: facilityId,
-    order_category: "Laboratory",
+    // $select: ["createdAt", "appointment_status"],
+    facility: facilityId,
+    //bills
+    // "participantInfo.billingFacility": facilityId,
+    // report_status: "Draft",
+    "orderInfo.orderObj.order_category": "Radiology Order",
+    // order_category: "Radiology Order",Checked In
+    // fulfilled: "False",
   };
 
-  const {
-    data: modelResult,
-    isPending,
-    error,
-  } = useFetchData(service, query, true);
+  const { data: modelResult, isPending, error } = useFetchData(service, query);
 
   let err = error;
   return {

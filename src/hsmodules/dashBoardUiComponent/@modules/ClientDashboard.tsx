@@ -31,7 +31,8 @@ const ClientDashboard = () => {
   const appointmentService = client.service("/appointments");
   const { totalValue } = TotalNumOfData(clientService);
   const { totalNewClient } = TotalNewClientWithinAMonth(appointmentService);
-  const { totalUpcomingAppointment } = TotalUpcomingAppointment(clientService);
+  const { totalUpcomingAppointment } =
+    TotalUpcomingAppointment(appointmentService);
   const { monthNameForCurrentYear, newClientLineSeriesData } =
     clientLineData(clientService);
   const { circleSeriesArray } = CircleSeriesData(clientService);
@@ -68,7 +69,7 @@ const ClientDashboard = () => {
             title="Upcoming Appointments"
           />
           <ViewCard count={totalNewClient} title="Total New Clients" />
-          <ViewCard count={30} title={`Doctor's on Duty`} />
+          {/* <ViewCard count={30} title={`Doctor's on Duty`} /> */}
         </StartCardWapper>
 
         <DashboardContainer>

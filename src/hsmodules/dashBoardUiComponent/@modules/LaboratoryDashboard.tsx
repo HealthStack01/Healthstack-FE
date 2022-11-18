@@ -3,10 +3,6 @@ import React, { useEffect, useState } from "react";
 
 import ViewCard from "./@sections/ViewCard";
 import ViewCardWithFilter from "./@sections/ViewCardWithFilter";
-// import AreaChart from "../charts/AreaChart";
-// import BarChart from "../charts/BarChart";
-// import BubbleChart from "../charts/BubbleChart";
-// import CircleChart from "../charts/CircleChart";
 
 import client from "../../../feathers";
 
@@ -17,40 +13,61 @@ import {
 } from "../core-ui/styles";
 import { userDetails } from "../utils/fetchUserDetails";
 
+import {
+  LabOrderReceivedLineData,
+  LabOrderReportedLineData,
+} from "../utils/chartData/LineData";
+
 import { TotalModeltDataForPresent } from "../utils/chartData/queryHandler";
 
 import {
-  FetchTotalRevenue,
-  FetchTotalBalance,
-  FetchTotalMoneyCollectedWithInPresentRange,
-  ModelResult,
+  TotalLabOrderPending,
+  TotalLabReportPending,
+  FetchTotalLabOrderReceivedWithInPresentRange,
+  // FetchTotalLabReportWithInPresentRange,
+  // ModelResult,
 } from "../utils/chartData/chartDataHandler";
+import LineChart from "../charts/LineChart";
+import ColumnChart from "../charts/ColumnChart";
 
 const LaboratoryDashboard = () => {
   const [userName, setUserName] = useState("");
   const [facilityName, setFacilityName] = useState("");
-  const billsService = client.service("/bills");
-  const inventoryService = client.service("inventory");
+  const labResultService = client.service("labresults");
   const orderService = client.service("order");
 
   //query function
 
-  const { fetchTotalRevenue } = FetchTotalRevenue(billsService);
-  const { fetchTotalBalance } = FetchTotalBalance(billsService);
+  const { totalLabOrderPending } = TotalLabOrderPending(orderService);
+  const { totalLabReportPending } = TotalLabReportPending(labResultService);
+  const { monthNameForCurrentYear, labOrderReceivedLineData } =
+    LabOrderReceivedLineData(orderService);
+
+  const { labReportLineData } = LabOrderReportedLineData(labResultService);
+
+  const columnDataSeries = [labOrderReceivedLineData[0], labReportLineData[0]];
 
   const {
-    totalPresentDataObject: fetchTotalMoneyCollectedPresentDataObject,
+    totalPresentDataObject: fetchTotalLabOrderReceivedWithInPresentRange,
     isLoading,
   } = TotalModeltDataForPresent(
-    billsService,
-    FetchTotalMoneyCollectedWithInPresentRange
+    orderService,
+    FetchTotalLabOrderReceivedWithInPresentRange
   );
 
-  const { modelResult } = ModelResult(orderService);
+  // const {
+  //   totalPresentDataObject: fetchTotalLabReportWithInPresentRange,
+  // } = TotalModeltDataForPresent(
+  //   orderService,
+  //   FetchTotalLabReportWithInPresentRange
+  // );
 
-  console.log("model data ===>", {
-    modelResult: modelResult,
-  });
+  // const { modelResult } = ModelResult(orderService);
+
+  // console.log("model data ===>", {
+  //   modelResult: modelResult,
+  //   columnDataSerie: columnDataSeries,
+  // });
 
   useEffect(() => {
     const { userFullName, facilityFullName } = userDetails();
@@ -72,13 +89,19 @@ const LaboratoryDashboard = () => {
         </Box>
 
         <StartCardWapper>
-          <ViewCard count={40} title="Lab Order Reported" />
-          <ViewCard count={56} title="Pending Bills" />
+          <ViewCard
+            count={totalLabOrderPending}
+            title="Total Pending Lab Order"
+          />
+          <ViewCard
+            count={totalLabReportPending}
+            title=" Total Pending Lab Report"
+          />
           <ViewCardWithFilter
             count={0}
             title="Lab orders received"
             hasFilter={true}
-            dataSource={fetchTotalMoneyCollectedPresentDataObject}
+            dataSource={fetchTotalLabOrderReceivedWithInPresentRange}
             isLoading={isLoading}
           />
         </StartCardWapper>
@@ -93,31 +116,22 @@ const LaboratoryDashboard = () => {
             }}
           >
             <Box sx={{ width: "100%", p: 0, pt: 2, pb: 2 }}>
-              <ViewCard
-                count={fetchTotalBalance}
-                title="Total Pending Balance"
+              <LineChart
+                title="Lab order"
+                series={labOrderReceivedLineData}
+                monthArray={monthNameForCurrentYear}
               />
-              {/* <AreaChart height={200} title="Trends" />
-              <AreaChart height={200} title="New Clients" /> */}
             </Box>
             <Box sx={{ width: "100%", pt: 2, pb: 2 }}>
+              <ColumnChart
+                title="Lab Order sent"
+                series={columnDataSeries}
+                xLabels={monthNameForCurrentYear}
+              />
+            </Box>
+            {/* <Box sx={{ width: "100%", pt: 2, pb: 2 }}>
               <ViewCard count={56} title=" Most frequent lab tests received" />
-              {/* <BarChart title="Payment Mode" />
-              <BubbleChart /> */}
-            </Box>
-            <Box sx={{ width: "100%", pt: 2, pb: 2 }}>
-              {/* <Stack
-                direction='row'
-                spacing={0.4}
-                sx={{ mt: 4 }}
-                justifyContent='center'
-              >
-                <Button>Male</Button>
-                <Button>Female</Button>
-                <Button>Others</Button>
-              </Stack> */}
-              {/* <CircleChart /> */}
-            </Box>
+            </Box> */}
           </Box>
         </DashboardContainer>
       </Box>

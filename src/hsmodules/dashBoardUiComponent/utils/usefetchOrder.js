@@ -15,7 +15,6 @@ const useFetchOrder = (service, query) => {
         query: {
           ...query,
           destination: facilityId,
-          order_category: "Prescription",
           $limit: 1000,
         },
       })

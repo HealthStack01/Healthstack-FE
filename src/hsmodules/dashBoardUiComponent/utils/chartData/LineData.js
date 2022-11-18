@@ -79,8 +79,11 @@ const TotalPharmacyStockWithinARangeOf30Day = (service, lt, gt) => {
 };
 
 export const clientLineData = (service) => {
-  const { monthNameForCurrentYear, numOfDayInmonthForCurrentYear } =
-    getDayIntheOtherMonth();
+  const {
+    monthNameForCurrentYear,
+    numOfDayInmonthForCurrentYear,
+    currentYear,
+  } = getDayIntheOtherMonth();
   const length = numOfDayInmonthForCurrentYear.length;
 
   var prevState = numOfDayInmonthForCurrentYear[length - 1];
@@ -112,7 +115,7 @@ export const clientLineData = (service) => {
 
   var newClientLineSeriesData = [
     {
-      name: "2022",
+      name: currentYear,
       data: newClientLineData,
     },
   ];
@@ -321,4 +324,124 @@ export const AdmittedAndDischargedPatientLineData = (service) => {
     monthNameForCurrentYear,
     admittedAndDischargedPatientLineSeriesData,
   };
+};
+
+///new
+
+export const TotalLabOrderReceivedWithinARangeOf30Day = (service, lt, gt) => {
+  var dayGT = 24 * 60 * 60 * 1000 * gt;
+  var dayLT = 24 * 60 * 60 * 1000 * lt;
+
+  var query = {
+    $sort: { createdAt: -1 },
+    // $select: ["createdAt"],
+    destination: facilityId,
+    order_category: "Laboratory",
+    createdAt: {
+      $gt: new Date().getTime() - dayGT,
+      $lt: new Date().getTime() - dayLT,
+    },
+  };
+  var { data, isPending, error } = useFetchData(service, query);
+  const totalDataWithinARangeOf30Day = data.length;
+  let err = error;
+  return {
+    totalDataWithinARangeOf30Day,
+    isPending,
+    err,
+  };
+};
+
+export const LabOrderReceivedLineData = (service) => {
+  var { monthNameForCurrentYear, lineSeriesData: labOrderReceivedLineData } =
+    LineDataFunction(service, TotalLabOrderReceivedWithinARangeOf30Day);
+
+  labOrderReceivedLineData[0].name = "Lab Order Received";
+
+  return { monthNameForCurrentYear, labOrderReceivedLineData };
+};
+
+export const TotalLabReportWithinARangeOf30Day = (service, lt, gt) => {
+  var dayGT = 24 * 60 * 60 * 1000 * gt;
+  var dayLT = 24 * 60 * 60 * 1000 * lt;
+
+  var query = {
+    $sort: { createdAt: -1 },
+    facility: facilityId,
+    status: "Draft",
+    createdAt: {
+      $gt: new Date().getTime() - dayGT,
+      $lt: new Date().getTime() - dayLT,
+    },
+  };
+  var { data, isPending, error } = useFetchData(service, query);
+  const totalDataWithinARangeOf30Day = data.length;
+  let err = error;
+  return {
+    totalDataWithinARangeOf30Day,
+    isPending,
+    err,
+  };
+};
+
+export const LabOrderReportedLineData = (service) => {
+  const { monthNameForCurrentYear, lineSeriesData: labReportLineData } =
+    LineDataFunction(service, TotalLabReportWithinARangeOf30Day);
+  labReportLineData[0].name = "Lab Pending Report";
+  return { monthNameForCurrentYear, labReportLineData };
+};
+
+export const LineDataFunction = (service, TotalDataWithinARangeOf30Day) => {
+  const {
+    monthNameForCurrentYear,
+    numOfDayInmonthForCurrentYear,
+    currentYear,
+  } = getDayIntheOtherMonth();
+  const length = numOfDayInmonthForCurrentYear.length;
+
+  var prevState = numOfDayInmonthForCurrentYear[length - 1];
+  var lineData = [];
+
+  for (let i = length - 2; i >= 0; i--) {
+    let lt = prevState;
+    let gt = prevState + numOfDayInmonthForCurrentYear[i];
+    const { totalDataWithinARangeOf30Day } = TotalDataWithinARangeOf30Day(
+      service,
+      lt,
+      gt
+    );
+
+    // console.log("test", {
+    //   totalDataWithinARangeOf30Day: totalDataWithinARangeOf30Day,
+    // });
+    lineData.unshift(totalDataWithinARangeOf30Day);
+    prevState = prevState + numOfDayInmonthForCurrentYear[i];
+  }
+
+  const { totalDataWithinARangeOf30Day } = TotalDataWithinARangeOf30Day(
+    service,
+    0,
+    numOfDayInmonthForCurrentYear[length - 1]
+  );
+
+  lineData.push(totalDataWithinARangeOf30Day);
+  // console.log("result day details", {
+  //   dayDetail: newClientLineData,
+  // });
+
+  var lineSeriesData = [
+    {
+      name: currentYear,
+      data: lineData,
+    },
+  ];
+
+  return { monthNameForCurrentYear, lineSeriesData };
+};
+
+export const ClientLineData = (service) => {
+  const { monthNameForCurrentYear, lineSeriesData: newClientLineSeriesData } =
+    LineDataFunction(service, TotalNewClientWithinARangeOf30Day);
+
+  return { monthNameForCurrentYear, newClientLineSeriesData };
 };

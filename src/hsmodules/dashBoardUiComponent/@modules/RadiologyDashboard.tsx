@@ -2,10 +2,11 @@ import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 import ViewCard from "./@sections/ViewCard";
-import AreaChart from "../charts/AreaChart";
-import BarChart from "../charts/BarChart";
-import BubbleChart from "../charts/BubbleChart";
-import CircleChart from "../charts/CircleChart";
+import ViewCardWithFilter from "./@sections/ViewCardWithFilter";
+import LineChart from "../charts/LineChart";
+// import ColumnChart from "../charts/ColumnChart";
+
+import client from "../../../feathers";
 
 import {
   DashboardContainer,
@@ -14,15 +15,49 @@ import {
 } from "../core-ui/styles";
 import { userDetails } from "../utils/fetchUserDetails";
 
+import {
+  TotalRadOrderReceived,
+  TotalRadPendingOrder,
+  TotalRadCheckIn,
+  TotalRadDraftResult,
+  TotalRadFinalResult,
+  TotalRadPendingResult,
+  ModelResult,
+} from "../utils/chartData/chartDataHandler";
+
 const RadiologyDashboard = () => {
   const [userName, setUserName] = useState("");
   const [facilityName, setFacilityName] = useState("");
+
+  const orderService = client.service("order");
+  const appointmentService = client.service("appointments");
+  const billsService = client.service("bills");
+
+  const { totalRadOrderReceived } = TotalRadOrderReceived(orderService);
+  const { totalRadPendingOrder } = TotalRadPendingOrder(orderService);
+  const { totalRadCheckIn } = TotalRadCheckIn(appointmentService);
+  const { totalRadDraftResult } = TotalRadDraftResult(billsService);
+  const { totalRadFinalResult } = TotalRadFinalResult(billsService);
+
+  const { modelResult } = ModelResult(appointmentService);
+
+  console.log("model data ===>", {
+    modelResult: modelResult,
+  });
 
   useEffect(() => {
     const { userFullName, facilityFullName } = userDetails();
     setUserName(userFullName);
     setFacilityName(facilityFullName);
   }, []);
+
+  const inventorySaleValuePresentDataObject = {
+    totalInPresentDay: 10,
+    totalInPresentWeek: 20,
+    totalInPresentMonth: 30,
+    totalInPresentQuarter: 40,
+    totalInPresentYear: 50,
+  };
 
   return (
     <DashboardPageWrapper>
@@ -38,9 +73,22 @@ const RadiologyDashboard = () => {
         </Box>
 
         <StartCardWapper>
-          <ViewCard count={40} title="Total Clients" />
-          {/* <ViewCard count={16} title="Upcoming Appointments" hasFilter={true} /> */}
-          <ViewCard count={56} title="Total New Clients" />
+          <ViewCard
+            count={totalRadPendingOrder}
+            title="Total Pending Radiology Order"
+          />
+          <ViewCard
+            count={totalRadOrderReceived}
+            title=" Total Radiology Order Received"
+          />
+          {/* <ViewCard count={totalRadOrderReceived} title=" Total Pending Radiiology Results" />  */}
+          <ViewCardWithFilter
+            count={0}
+            title="Lab orders received"
+            hasFilter={true}
+            dataSource={inventorySaleValuePresentDataObject}
+            isLoading={false}
+          />
         </StartCardWapper>
 
         <DashboardContainer>
@@ -53,30 +101,29 @@ const RadiologyDashboard = () => {
             }}
           >
             <Box sx={{ width: "100%", p: 0, pt: 2, pb: 2 }}>
-              <AreaChart height={200} title="Trends" />
-              <AreaChart height={200} title="New Clients" />
+              <LineChart
+                title="Radiology order"
+                // series={labOrderReceivedLineData}
+                // monthArray={monthNameForCurrentYear}
+              />
             </Box>
             <Box sx={{ width: "100%", pt: 2, pb: 2 }}>
-              <BarChart title="Payment Mode" />
-              <BubbleChart />
+              {/* <ColumnChart
+                title="Radiology Order sent"
+                // series={columnDataSeries}
+                // xLabels={monthNameForCurrentYear}
+              /> */}
             </Box>
             <Box sx={{ width: "100%", pt: 2, pb: 2 }}>
-              <Typography sx={{ fontWeight: "bold", fontSize: "22px" }}>
-                Gender
-              </Typography>
-              <Typography variant="body2">Total Client by Gender</Typography>
-
-              {/* <Stack
-                direction='row'
-                spacing={0.4}
-                sx={{ mt: 4 }}
-                justifyContent='center'
-              >
-                <Button>Male</Button>
-                <Button>Female</Button>
-                <Button>Others</Button>
-              </Stack> */}
-              <CircleChart />
+              <ViewCard count={totalRadCheckIn} title="Total Check In" />
+              <ViewCard
+                count={totalRadDraftResult}
+                title="Draft Radiology Result"
+              />
+              <ViewCard
+                count={totalRadFinalResult}
+                title="Final Radiology Result"
+              />
             </Box>
           </Box>
         </DashboardContainer>
