@@ -11,7 +11,10 @@ export const menuItems = [
     exact: true,
     to: "/app",
     iconClassName: "bi bi-house-door",
-    subMenus: [{ name: "Dashboard", to: "/app/overview/dashboard" }],
+    subMenus: [
+      { name: "Dashboard", to: "/app/overview/dashboard" },
+      { name: "Global Admin Dashboard", to: "/app/global-admin/dashboard" },
+    ],
   },
   {
     name: "Client",
@@ -159,6 +162,14 @@ export const menuItems = [
     ],
   },
   {
+    name: "CRM",
+    exact: true,
+    to: "/app",
+    iconClassName: "bi bi-rss",
+    subMenus: [{ name: "Dashboard", to: "/app/crm/dashboard" }],
+  },
+
+  {
     name: "Epidemiology",
     exact: true,
     to: "/app/communication",
@@ -202,6 +213,7 @@ export const menuItems = [
       { name: "Bill Order Sent", to: "/app/theatre/theatre-bill" },
     ],
   },
+
   {
     name: "Logout",
     exact: true,

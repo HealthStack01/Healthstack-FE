@@ -127,8 +127,8 @@ const WardDashboard = () => {
         </Box>
 
         <StartCardWapper>
-          <ViewCard count={40} title="Available Bed Spaces" />
-          <ViewCard count={30} title="Occupancy Rate" />
+          {/* <ViewCard count={40} title="Available Bed Spaces" />
+          <ViewCard count={30} title="Occupancy Rate" /> */}
           <ViewCard count={totalPendingAdmissions} title="Pending Admission" />
         </StartCardWapper>
         <StartCardWapper>
@@ -188,7 +188,7 @@ const WardDashboard = () => {
                 title="Total Client by Gender"
               />
               <ViewCard count={totalInPatient} title="In Patient" />
-              <ViewCard count={30} title="Out Patient" />
+              {/* <ViewCard count={30} title="Out Patient" /> */}
             </Box>
           </Box>
         </DashboardContainer>

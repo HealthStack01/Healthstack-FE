@@ -144,6 +144,8 @@ import InventoryDashboard from "./dashBoardUiComponent/@modules/InventoryDashboa
 import FinanceDashboard from "./dashBoardUiComponent/@modules/FinanceDashboard";
 import LaboratoryDashboard from "./dashBoardUiComponent/@modules/LaboratoryDashboard";
 import RadiologyDashboard from "./dashBoardUiComponent/@modules/RadiologyDashboard";
+import GlobalAdminDashboard from "./dashBoardUiComponent/@modules/GlobalAdminDashboard";
+import CRMDashboard from "./dashBoardUiComponent/@modules/CrmDashboard";
 
 const moduleLocationTypes = {
   clinic: "Clinic",
@@ -184,6 +186,10 @@ const AppRoutes = () => {
           <Route
             path="/app/overview/dashboard"
             element={<LandingPageDashboard />}
+          />
+          <Route
+            path="/app/global-admin/dashboard"
+            element={<GlobalAdminDashboard />}
           />
 
           {/* ***************************** ACCOUNTS ROUTES ************************************* */}
@@ -377,6 +383,10 @@ const AppRoutes = () => {
             path="/app/laboratory/dashboard"
             element={<LaboratoryDashboard />}
           />
+
+          {/* ***************************** CRM ROUTES ************************************* */}
+
+          <Route path="/app/crm/dashboard" element={<CRMDashboard />} />
 
           {/* ***************************** PHARMACY ROUTES ************************************* */}
 

@@ -1127,7 +1127,7 @@ export const ModelResult = (service) => {
   const query = {
     $sort: { createdAt: -1 },
     // $select: ["createdAt", "appointment_status"],
-    facility: facilityId,
+    // facility: facilityId,
     //bills
     // "participantInfo.billingFacility": facilityId,
     // report_status: "Draft",

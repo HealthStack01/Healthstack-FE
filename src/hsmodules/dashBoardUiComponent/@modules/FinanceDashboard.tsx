@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 
 import ViewCard from "./@sections/ViewCard";
 import ViewCardWithFilter from "./@sections/ViewCardWithFilter";
-import AreaChart from "../charts/AreaChart";
-import BarChart from "../charts/BarChart";
-import BubbleChart from "../charts/BubbleChart";
-import CircleChart from "../charts/CircleChart";
+// import AreaChart from "../charts/AreaChart";
+// import BarChart from "../charts/BarChart";
+// import BubbleChart from "../charts/BubbleChart";
+// import CircleChart from "../charts/CircleChart";
 
 import client from "../../../feathers";
 
@@ -72,7 +72,7 @@ const FinanceDashboard = () => {
 
         <StartCardWapper>
           <ViewCard count={`${fetchTotalRevenue}K`} title="Total Revenue" />
-          <ViewCard count={56} title="Pending Bills" />
+          {/* <ViewCard count={56} title="Pending Bills" /> */}
           <ViewCardWithFilter
             count={0}
             title="Total Money collected"
