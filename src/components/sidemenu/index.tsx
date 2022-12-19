@@ -11,10 +11,7 @@ export const menuItems = [
     exact: true,
     to: "/app",
     iconClassName: "bi bi-house-door",
-    subMenus: [
-      { name: "Dashboard", to: "/app/overview/dashboard" },
-      { name: "Global Admin Dashboard", to: "/app/global-admin/dashboard" },
-    ],
+    subMenus: [{ name: "Dashboard", to: "/app/overview/dashboard" }],
   },
   {
     name: "Client",
